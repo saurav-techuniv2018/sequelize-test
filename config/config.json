@@ -1,23 +1,26 @@
 {
   "development": {
-    "username": "sauravsahu",
+    "username": "saurav",
     "password": null,
     "database": "first_dev",
     "host": "127.0.0.1",
+    "port": 9000,
     "dialect": "postgres"
   },
   "test": {
-    "username": "sauravsahu",
+    "username": "saurav",
     "password": null,
     "database": "first_test",
     "host": "127.0.0.1",
+    "port": 9000,
     "dialect": "postgres"
   },
   "production": {
-    "username": "root",
+    "username": "saurav",
     "password": null,
-    "database": "database_production",
+    "database": "first",
     "host": "127.0.0.1",
-    "dialect": "mysql"
+    "port": 9000,
+    "dialect": "postgres"
   }
 }
