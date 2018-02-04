@@ -55,4 +55,46 @@ module.exports = [
         });
     },
   },
+  {
+    path: '/users/{id}',
+    method: 'PATCH',
+    handler: (request, response) => {
+      const { id } = request.params;
+
+      models.users
+        .findOne({
+          where: {
+            id: Number(id),
+          },
+        })
+        .then((user) => {
+          if (user === null) {
+            throw new Error(`Could not find user with id: ${id}.`);
+          }
+
+          return user.updateAttributes({
+            firstName: request.payload.firstName || user.firstName,
+            lastName: request.payload.lastName || user.lastName,
+          });
+        })
+        .then(() => {
+          response({
+            statusCode: 204,
+          });
+        }, (reason) => {
+          response({
+            data: { reason: reason.message },
+            statusCode: 404,
+          });
+        })
+        .catch(() => {
+          response({
+            data: {
+              reason: 'Could not update user attributes.',
+            },
+            statusCode: 500,
+          });
+        });
+    },
+  },
 ];

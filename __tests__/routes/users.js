@@ -5,18 +5,14 @@ const server = require('../../src/server');
 
 const route = '/users';
 
-describe(route, () => {
-  beforeEach(() => {
-    models.users.create({
-      firstName: 'John',
-      lastName: 'Allen',
-    })
-      .then(() => { })
-      .catch(console.log);
-  });
-  afterEach(() => models.users.truncate());
-  afterAll(() => models.close());
+beforeEach(() => models.users.create({
+  firstName: 'John',
+  lastName: 'Allen',
+}));
+afterEach(() => models.users.destroy({ truncate: true }));
+afterAll(() => models.close());
 
+describe(route, () => {
   describe('method POST', () => {
     test('should return a 201 created statusCode', (done) => {
       expect.assertions(1);
@@ -91,6 +87,46 @@ describe(route, () => {
         .catch((reason) => {
           console.log(reason.message);
         });
+    });
+  });
+  describe('method PATCH', () => {
+    const requestBody = {
+      firstName: 'Oliver',
+      lastName: 'Queen',
+    };
+
+    describe('should return 404 statusCode ', () => {
+      test('when resource is not available', (done) => {
+        supertest(server.listener)
+          .patch(`${route}/100`)
+          .send(requestBody)
+          .then((response) => {
+            expect(response.body.statusCode).toBe(404);
+            done();
+          })
+          .catch(console.log);
+      });
+    });
+    describe('should return 204 statusCode', () => {
+      test('when modification is made on available resource', (done) => {
+        models.users.findOne({
+          where: {
+            firstName: 'John',
+          },
+        })
+          .then(user => user.id)
+          .then((id) => {
+            console.log(`${route}/${id}`);
+            return supertest(server.listener)
+              .patch(`${route}/${id}`)
+              .send(requestBody);
+          })
+          .then((response) => {
+            expect(response.body.statusCode).toBe(204);
+            done();
+          })
+          .catch(console.log);
+      });
     });
   });
 });
