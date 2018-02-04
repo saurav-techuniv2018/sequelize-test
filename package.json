@@ -5,8 +5,8 @@
   "main": "src/server.js",
   "scripts": {
     "migrate-test": "NODE_ENV=test sequelize db:migrate:undo:all && NODE_ENV=test sequelize db:migrate",
-    "test": "npm run migrate-test && jest",
-    "start": "node src/server.js"    
+    "test": "npm run migrate-test && jest --forceExit",
+    "start": "node src/server.js"
   },
   "repository": {
     "type": "git",
@@ -29,12 +29,14 @@
     "sequelize": "^4.32.2"
   },
   "devDependencies": {
+    "@types/jest": "^22.1.1",
     "eslint": "^4.9.0",
     "eslint-config-airbnb-base": "^12.1.0",
     "eslint-plugin-import": "^2.7.0",
     "eslint-plugin-jsx-a11y": "^6.0.2",
     "eslint-plugin-react": "^7.4.0",
     "jest": "^22.1.4",
-    "sequelize-cli": "^3.2.0"
+    "sequelize-cli": "^3.2.0",
+    "supertest": "^3.0.0"
   }
 }

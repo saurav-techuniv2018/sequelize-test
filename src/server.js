@@ -3,7 +3,7 @@ const hapi = require('hapi');
 const allRoutes = require('./routes');
 
 const server = new hapi.Server();
-const port = Number(process.env.PORT || process.argv[2] || 8080);
+const port = Number(process.env.PORT) || Number(process.argv[2]) || 8080;
 
 server.connection({
   host: 'localhost',
