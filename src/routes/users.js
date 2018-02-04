@@ -97,4 +97,38 @@ module.exports = [
         });
     },
   },
+  {
+    path: '/users/{id}',
+    method: 'DELETE',
+    handler: (request, response) => {
+      const id = Number(request.params.id);
+
+      models.users
+        .findOne({
+          where: { id },
+        })
+        .then(
+          () => models.users.destroy({
+            where: {
+              id,
+            },
+          }),
+          () => response({
+            data: {
+              reason: `Could not find user with id: ${id}.`,
+            },
+            statusCode: 404,
+          }),
+        )
+        .then(() => response({
+          statusCode: 204,
+        }))
+        .catch(() => response({
+          data: {
+            reason: 'Could not delete user.',
+          },
+          statusCode: 500,
+        }));
+    },
+  },
 ];

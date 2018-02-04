@@ -115,17 +115,40 @@ describe(route, () => {
           },
         })
           .then(user => user.id)
-          .then((id) => {
-            console.log(`${route}/${id}`);
-            return supertest(server.listener)
-              .patch(`${route}/${id}`)
-              .send(requestBody);
-          })
+          .then(id => supertest(server.listener)
+            .patch(`${route}/${id}`)
+            .send(requestBody))
           .then((response) => {
             expect(response.body.statusCode).toBe(204);
             done();
           })
           .catch(console.log);
+      });
+    });
+  });
+  describe('method DELETE', () => {
+    describe('should return 404 statusCode', () => {
+      test('when requested resource is not available', (done) => {
+        supertest(server.listener)
+          .delete(`/${route}/100`)
+          .then((response) => {
+            expect(response.body.statusCode).toBe(404);
+            done();
+          });
+      });
+      test('when requested resource is available', (done) => {
+        models.users.findOne({
+          where: {
+            firstName: 'John',
+          },
+        })
+          .then(user => user.id)
+          .then(id => supertest(server.listener)
+            .delete(`${route}/${id}`))
+          .then((response) => {
+            expect(response.body.statusCode).toBe(204);
+            done();
+          });
       });
     });
   });
