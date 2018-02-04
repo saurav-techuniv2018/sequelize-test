@@ -16,13 +16,39 @@ module.exports = [
               firstName: result.dataValues.firstName,
               lastName: result.dataValues.lastName,
             },
-            statusCode: 200,
+            statusCode: 201,
           });
         })
         .catch(() => {
           response({
             data: {
               reason: 'Could not insert new user.',
+            },
+            statusCode: 500,
+          });
+        });
+    },
+  },
+  {
+    path: '/users',
+    method: 'GET',
+    handler: (request, response) => {
+      models.users.findAll()
+        .then(result => result.map(row => ({
+          id: row.id,
+          firstName: row.firstName,
+          lastName: row.lastName,
+        })))
+        .then((users) => {
+          response({
+            data: users,
+            statusCode: 200,
+          });
+        })
+        .catch(() => {
+          response({
+            data: {
+              reason: 'Unable to retrieve users.',
             },
             statusCode: 500,
           });
